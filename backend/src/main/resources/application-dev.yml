@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  mail:
+    host: localhost
+    port: 1025
+
+logging:
+  level:
+    com.picore: DEBUG
+    org.springframework.security: DEBUG

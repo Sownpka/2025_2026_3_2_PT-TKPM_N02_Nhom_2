@@ -1,0 +1,49 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: picore-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: picore
+      MYSQL_USER: picore
+      MYSQL_PASSWORD: picore123
+    ports:
+      - "3306:3306"
+    volumes:
+      - picore-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: picore-backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_USERNAME: picore
+      DB_PASSWORD: picore123
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/picore?useSSL=false&serverTimezone=Asia/Ho_Chi_Minh&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
+      JWT_SECRET: picore-secret-change-in-production-2024
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: picore-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  picore-mysql-data:
