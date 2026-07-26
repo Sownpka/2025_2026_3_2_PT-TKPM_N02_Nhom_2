@@ -1,3 +1,8 @@
+# AI / Claude agent files
+.claude/
+_workspace/
+CLAUDE.md
+
 # Maven
 backend/target/
 backend/.mvn/wrapper/maven-wrapper.jar
